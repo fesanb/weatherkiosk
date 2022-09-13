@@ -107,3 +107,8 @@ def initUI(self):
     except Exception as e:
         filename = Path(__file__).name
         error_handle(e, filename)
+
+if __name__ == '__main__':
+	app = QApplication(sys.argv)
+	ex = App()
+	ex.show()
