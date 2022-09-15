@@ -13,6 +13,8 @@ response = requests.get(url, headers=headers)
 rdata = response.text
 jdata = json.loads(rdata)
 
+partlycloudy_night = "03n.png"
+
 
 def fetch_weather(wid):
 
@@ -27,24 +29,50 @@ def fetch_weather(wid):
     return cleantime, temp, wind, rain, symbol
 
 
-
-print(fetch_weather(1)[0])
-
 win = Tk() #creating the main window and storing the window object in 'win'
 win.geometry('500x200') #setting the size of the window
 win.title('WeatherKiosk') #setting title of the window
+win.geometry("720x480")
 
-wl0 = Label(win, text=fetch_weather(1)[0])
-wl1 = Label(win, text=fetch_weather(1)[1])
-wl2 = Label(win, text=fetch_weather(1)[2])
-wl3 = Label(win, text=fetch_weather(1)[3])
-wl4 = Label(win, text=fetch_weather(1)[4])
+row = 1
+timeseri = 0
+i = 0
 
-wl0.grid(row=0, column=0)
-wl1.grid(row=0, column=1)
-wl2.grid(row=0, column=2)
-wl3.grid(row=0, column=3)
-wl4.grid(row=0, column=4)
+h0 = Label(win, text="TID")
+h1 = Label(win, text="Temperatur")
+h2 = Label(win, text="Vind")
+h3 = Label(win, text="Regn")
+h4 = Label(win, text="ICON")
+
+h0.grid(row=0, column=0)
+h1.grid(row=0, column=1)
+h2.grid(row=0, column=2)
+h3.grid(row=0, column=3)
+h4.grid(row=0, column=4)
+
+win.columnconfigure(0, minsize=100)
+win.columnconfigure(1, minsize=100)
+win.columnconfigure(2, minsize=100)
+win.columnconfigure(3, minsize=100)
+win.columnconfigure(4, minsize=100)
+
+
+while i < 20:
+    wl0 = Label(win, text="kl " + fetch_weather(timeseri)[0])
+    wl1 = Label(win, text=fetch_weather(timeseri)[1] + " °C")
+    wl2 = Label(win, text=fetch_weather(timeseri)[2] + " m/s")
+    wl3 = Label(win, text=fetch_weather(timeseri)[3] + " mm")
+    wl4 = Label(win, text=fetch_weather(timeseri)[4])
+
+    wl0.grid(row=row, column=0)
+    wl1.grid(row=row, column=1)
+    wl2.grid(row=row, column=2)
+    wl3.grid(row=row, column=3)
+    wl4.grid(row=row, column=4)
+
+    row += 1
+    timeseri += 1
+    i += 1
 
 
 
