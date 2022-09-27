@@ -5,7 +5,6 @@ import json
 import time
 
 from tkinter import *
-
 from PIL import ImageTk, Image
 import os
 
@@ -79,13 +78,9 @@ def fetch_weather(wid):
     return cleantime, temp, wind, rain, symbol
 
 
-
-
-
 def fetch_symbols():
     isymb = 0
     weather_code = []
-
 
     while isymb < weather_list:
         weather_code.append(str(jdata['properties']['timeseries'][isymb]['data']['next_1_hours']['summary']['symbol_code']))
@@ -94,30 +89,15 @@ def fetch_symbols():
     weather_code_red = [*set(weather_code)]
     print(weather_code_red)
 
+    weather_symbol = []
+
     for list in symbols:
         if weather_code_red[0] in list:
-            weather_symbol.append(weather_code_red[0], )
-
-
-        lists = [[1, 2, 3], [4, 5, 6]]
-
-        element = 4
-
-        element_in_lists = False
-
-        for list in lists:
-            if
-        element in list:
-
-        element_in_lists = True
-
-        print(element_in_lists)
-
-
+            weather_symbol.append([weather_code_red[0], list])
+            print(weather_symbol)
 
 
 fetch_symbols()
-
 
 
 win = Tk() #creating the main window and storing the window object in 'win'
