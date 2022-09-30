@@ -3,6 +3,8 @@
 import requests
 import json
 
+from datetime import datetime, timedelta
+
 from tkinter import *
 from PIL import ImageTk, Image
 
@@ -10,7 +12,7 @@ from PIL import ImageTk, Image
 weather_list = 20
 
 # Get weather
-weather_url = 'https://api.met.no/weatherapi/locationforecast/2.0/compact?lat=59.96&lon=10.74'
+weather_url = 'https://api.met.no/weatherapi/locationforecast/2.0/compact?lat=59.961662&lon=10.741941'
 weather_header = {'user-agent': 'weatherkiosk/0.1 stefan@bahrawy.net'}
 weather_response = requests.get(weather_url, headers=weather_header)
 
@@ -35,84 +37,51 @@ def fetch_weather(wid):
     rain = str(weather_jdata['properties']['timeseries'][wid]['data']['next_1_hours']['details']['precipitation_amount'])
     code = str(weather_jdata['properties']['timeseries'][wid]['data']['next_1_hours']['summary']['symbol_code'])
     cleantime = time[11:16]
+
+    format = '%H:%M'
+
+    time = datetime.strptime(cleantime, format)
+    tmp_cleantime = time + timedelta(minutes=120)
+    tmp_cleantime = tmp_cleantime.strftime(format)
+    cleantime = str(tmp_cleantime)
+
     return cleantime, temp, wind, rain, code
-
-
-def fetch_symbols():
-    isymb = 0
-    weather_code = []
-
-    while isymb < weather_list:
-        weather_code.append(str(weather_jdata['properties']['timeseries'][isymb]['data']['next_1_hours']['summary']['symbol_code']))
-        isymb += 1
-
-    weather_code_red1 = [*set(weather_code)]
-
-    isymb = 0
-    weather_code_red2 = []
-
-    for x in weather_code_red1:
-        if "_" in weather_code_red1[isymb]:
-            a = weather_code_red1[isymb].split("_")
-            weather_code_red2.append(a[0])
-        else:
-            a = weather_code_red1[isymb]
-            weather_code_red2.append(a)
-
-        isymb += 1
-    weather_code_red2 = [*set(weather_code_red2)]
-
-    isymb = 0
-    weather_dict = {}
-    for x in weather_code_red2:
-        weather_dict[weather_code_red2[isymb]] = variants_jdata[weather_code_red2[isymb]]
-        isymb += 1
-
-    isymb = 0
-    images = {}
-    for x in weather_code_red2:
-        if len(weather_dict[weather_code_red2[isymb]]['old_id']) == 1:
-            name = "0" +  weather_dict[weather_code_red2[isymb]]['old_id']
-        else:
-            name =  weather_dict[weather_code_red2[isymb]]['old_id']
-
-        if not (weather_dict[weather_code_red2[isymb]]['variants']):
-            name = name + ".png"
-        else:
-            name = name + "d.png"
-
-        path = "w-img/"
-
-        tmp_img = Image.open(path+name)
-        images[weather_code_red2[isymb]] = tmp_img.resize((50, 50))
-
-        isymb += 1
-
-    return images
-
-
-def fetch_info(code, variant):
-    print(variants_jdata[code]['old_id'])
-    print(variants_jdata[code]['desc_nb'])
-
-
-fetch_info('clearsky', 'night')
 
 
 win = Tk() #creating the main window and storing the window object in 'win'
 win.title('WeatherKiosk') #setting title of the window
+
 win.geometry("720x480")
 #win.attributes("-fullscreen", True)
 
-h0 = Label(win, text="TID")
-h1 = Label(win, text="Temperatur")
-h2 = Label(win, text="Vind")
-h3 = Label(win, text="Regn")
-h4 = Label(win, text="Info")
-h5 = Label(win, text="ICON")
+tmp_img = Image.open("img/clock.png")
+img = tmp_img.resize((50, 50))
+img_clock = ImageTk.PhotoImage(img)
 
-h0.config(font=("Courier", 20))
+tmp_img = Image.open("img/temp.png")
+img = tmp_img.resize((50, 50))
+img_temp = ImageTk.PhotoImage(img)
 
+tmp_img = Image.open("img/wind.png")
+img = tmp_img.resize((50, 50))
+img_wind = ImageTk.PhotoImage(img)
+
+tmp_img = Image.open("img/rain.png")
+img = tmp_img.resize((50, 50))
+img_rain = ImageTk.PhotoImage(img)
+
+# h0 = Label(win, text="TID")
+# h1 = Label(win, text="TEMPERATUR")
+# h2 = Label(win, text="VIND")
+# h3 = Label(win, text="REGN")
+
+h0 = Label(win, image=img_clock)
+h1 = Label(win, image=img_temp)
+h2 = Label(win, image=img_wind)
+h3 = Label(win, image=img_rain)
+
+h4 = Label(win, text="")
+h5 = Label(win, text="")
 
 h0.grid(row=0, column=0)
 h1.grid(row=0, column=1)
@@ -129,8 +98,8 @@ win.columnconfigure(4, minsize=100)
 win.columnconfigure(5, minsize=100)
 
 row = 1
-timeseri = 2
-i = 8
+timeseri = 1
+i = 0
 img = {}
 
 while i < weather_list:
@@ -139,6 +108,7 @@ while i < weather_list:
     wl2 = Label(win, text=fetch_weather(timeseri)[2] + " m/s")
     wl3 = Label(win, text=fetch_weather(timeseri)[3] + " mm")
 
+    print(fetch_weather(timeseri)[4])
     tmp_code = fetch_weather(timeseri)[4]
     if "_" in tmp_code:
         red_code = tmp_code.split("_")
@@ -184,3 +154,5 @@ while i < weather_list:
 
 
 win.mainloop() #running the loop that works as a trigger
+
+print("test")
