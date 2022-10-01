@@ -51,22 +51,22 @@ def fetch_weather(wid):
 win = Tk() #creating the main window and storing the window object in 'win'
 win.title('WeatherKiosk') #setting title of the window
 
-win.geometry("720x480")
-#win.attributes("-fullscreen", True)
+#win.geometry("720x480")
+win.attributes("-fullscreen", True)
 
-tmp_img = Image.open("img/clock.png")
+tmp_img = Image.open("/img/clock.png")
 img = tmp_img.resize((50, 50))
 img_clock = ImageTk.PhotoImage(img)
 
-tmp_img = Image.open("img/temp.png")
+tmp_img = Image.open("/img/temp.png")
 img = tmp_img.resize((50, 50))
 img_temp = ImageTk.PhotoImage(img)
 
-tmp_img = Image.open("img/wind.png")
+tmp_img = Image.open("/img/wind.png")
 img = tmp_img.resize((50, 50))
 img_wind = ImageTk.PhotoImage(img)
 
-tmp_img = Image.open("img/rain.png")
+tmp_img = Image.open("/img/rain.png")
 img = tmp_img.resize((50, 50))
 img_rain = ImageTk.PhotoImage(img)
 
@@ -133,7 +133,7 @@ while i < weather_list:
         variant = ""
 
 
-    name = "w-img/" + number + variant + ".png"
+    name = "/w-img/" + number + variant + ".png"
 
     tmp_img = Image.open(name)
     images = tmp_img.resize((50, 50))
