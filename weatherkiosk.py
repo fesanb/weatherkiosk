@@ -7,6 +7,7 @@ from datetime import datetime, timedelta
 
 from tkinter import *
 from PIL import ImageTk, Image
+from pathlib import Path
 
 # definitions
 weather_list = 20
@@ -54,19 +55,21 @@ win.title('WeatherKiosk') #setting title of the window
 #win.geometry("720x480")
 win.attributes("-fullscreen", True)
 
-tmp_img = Image.open('/img/clock.png')
+path = str(Path(__file__).parent.absolute())
+
+tmp_img = Image.open(path + "/img/clock.png")
 img = tmp_img.resize((50, 50))
 img_clock = ImageTk.PhotoImage(img)
 
-tmp_img = Image.open("/img/temp.png")
+tmp_img = Image.open(path + "/img/temp.png")
 img = tmp_img.resize((50, 50))
 img_temp = ImageTk.PhotoImage(img)
 
-tmp_img = Image.open("/img/wind.png")
+tmp_img = Image.open(path + "/img/wind.png")
 img = tmp_img.resize((50, 50))
 img_wind = ImageTk.PhotoImage(img)
 
-tmp_img = Image.open("/img/rain.png")
+tmp_img = Image.open(path + "/img/rain.png")
 img = tmp_img.resize((50, 50))
 img_rain = ImageTk.PhotoImage(img)
 
@@ -132,8 +135,7 @@ while i < weather_list:
     else:
         variant = ""
 
-
-    name = "/w-img/" + number + variant + ".png"
+    name = path + "/w-img/" + number + variant + ".png"
 
     tmp_img = Image.open(name)
     images = tmp_img.resize((50, 50))
@@ -154,5 +156,3 @@ while i < weather_list:
 
 
 win.mainloop() #running the loop that works as a trigger
-
-print("test")
