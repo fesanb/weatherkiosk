@@ -10,7 +10,7 @@ from PIL import ImageTk, Image
 from pathlib import Path
 
 # definitions
-weather_list = 20
+weather_list = 6
 
 # Get weather
 weather_url = 'https://api.met.no/weatherapi/locationforecast/2.0/compact?lat=59.961662&lon=10.741941'
@@ -49,11 +49,11 @@ def fetch_weather(wid):
     return cleantime, temp, wind, rain, code
 
 
-win = Tk() #creating the main window and storing the window object in 'win'
-win.title('WeatherKiosk') #setting title of the window
+win = Tk() # creating the main window and storing the window object in 'win'
+win.title('WeatherKiosk') # setting title of the window
 
-#win.geometry("720x480")
-win.attributes("-fullscreen", True)
+win.geometry("720x480")
+# win.attributes("-fullscreen", True)
 
 path = str(Path(__file__).parent.absolute())
 
@@ -106,12 +106,7 @@ i = 0
 img = {}
 
 while i < weather_list:
-    wl0 = Label(win, text="kl " + fetch_weather(timeseri)[0])
-    wl1 = Label(win, text=fetch_weather(timeseri)[1] + " °C")
-    wl2 = Label(win, text=fetch_weather(timeseri)[2] + " m/s")
-    wl3 = Label(win, text=fetch_weather(timeseri)[3] + " mm")
-
-    print(fetch_weather(timeseri)[4])
+    # Get data for wl4
     tmp_code = fetch_weather(timeseri)[4]
     if "_" in tmp_code:
         red_code = tmp_code.split("_")
@@ -121,8 +116,8 @@ while i < weather_list:
         code = fetch_weather(timeseri)[4]
         tmp_variant = ""
 
-    wl4 = Label(win, text=variants_jdata[code]['desc_nb'])
-    tmp_num =variants_jdata[code]['old_id']
+    # get data for wl5
+    tmp_num = variants_jdata[code]['old_id']
     if len(tmp_num) == 1:
         number = "0" + tmp_num
     else:
@@ -141,6 +136,17 @@ while i < weather_list:
     images = tmp_img.resize((50, 50))
 
     img[timeseri] = ImageTk.PhotoImage(images)
+
+    x = 0
+    while x is not weather_list:
+        print("TEST")
+        x += 1
+
+    wl0 = Label(win, text="kl " + fetch_weather(timeseri)[0])
+    wl1 = Label(win, text=fetch_weather(timeseri)[1] + " °C")
+    wl2 = Label(win, text=fetch_weather(timeseri)[2] + " m/s")
+    wl3 = Label(win, text=fetch_weather(timeseri)[3] + " mm")
+    wl4 = Label(win, text=variants_jdata[code]['desc_nb'])
     wl5 = Label(win, image=img[timeseri])
 
     wl0.grid(row=row, column=0)
@@ -155,4 +161,12 @@ while i < weather_list:
     i += 1
 
 
-win.mainloop() #running the loop that works as a trigger
+def update():
+    wl1.configure(text="TEST")
+    wl1.grid(row=1, column=0)
+    win.after(1000, update)
+
+
+# update()
+
+win.mainloop()  # running the loop that works as a trigger
