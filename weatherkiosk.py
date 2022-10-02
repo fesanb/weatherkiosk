@@ -12,15 +12,6 @@ from pathlib import Path
 # definitions
 weather_list = 6
 
-# Get weather
-weather_url = 'https://api.met.no/weatherapi/locationforecast/2.0/compact?lat=59.961662&lon=10.741941'
-weather_header = {'user-agent': 'weatherkiosk/0.1 stefan@bahrawy.net'}
-weather_response = requests.get(weather_url, headers=weather_header)
-
-weather_rdata = weather_response.text
-weather_jdata = json.loads(weather_rdata)
-
-
 # Get of variants / Legend
 variants_url = "https://api.met.no/weatherapi/weathericon/2.0/legends"
 variants_headers = {'user-agent': 'weatherkiosk/0.1 stefan@bahrawy.net'}
@@ -29,14 +20,25 @@ variants_response = requests.get(variants_url, headers=variants_headers)
 variants_rdata = variants_response.text
 variants_jdata = json.loads(variants_rdata)
 
+def api_weather():
+    weather_url = 'https://api.met.no/weatherapi/locationforecast/2.0/compact?lat=59.961662&lon=10.741941'
+    weather_header = {'user-agent': 'weatherkiosk/0.1 stefan@bahrawy.net'}
+    weather_response = requests.get(weather_url, headers=weather_header)
+
+    weather_rdata = weather_response.text
+    weather_jdata = json.loads(weather_rdata)
+
+    return weather_jdata
+
+
 
 def fetch_weather(wid):
 
-    time = str(weather_jdata['properties']['timeseries'][wid]['time'])
-    temp = str(weather_jdata['properties']['timeseries'][wid]['data']['instant']['details']['air_temperature'])
-    wind = str(weather_jdata['properties']['timeseries'][wid]['data']['instant']['details']['wind_speed'])
-    rain = str(weather_jdata['properties']['timeseries'][wid]['data']['next_1_hours']['details']['precipitation_amount'])
-    code = str(weather_jdata['properties']['timeseries'][wid]['data']['next_1_hours']['summary']['symbol_code'])
+    time = str(api_weather()['properties']['timeseries'][wid]['time'])
+    temp = str(api_weather()['properties']['timeseries'][wid]['data']['instant']['details']['air_temperature'])
+    wind = str(api_weather()['properties']['timeseries'][wid]['data']['instant']['details']['wind_speed'])
+    rain = str(api_weather()['properties']['timeseries'][wid]['data']['next_1_hours']['details']['precipitation_amount'])
+    code = str(api_weather()['properties']['timeseries'][wid]['data']['next_1_hours']['summary']['symbol_code'])
     cleantime = time[11:16]
 
     format = '%H:%M'
@@ -137,24 +139,26 @@ while i < weather_list:
 
     img[timeseri] = ImageTk.PhotoImage(images)
 
-    x = 0
-    while x is not weather_list:
-        print("TEST")
-        x += 1
+    wl0 = {}
+    wl1 = {}
+    wl2 = {}
+    wl3 = {}
+    wl4 = {}
+    wl5 = {}
 
-    wl0 = Label(win, text="kl " + fetch_weather(timeseri)[0])
-    wl1 = Label(win, text=fetch_weather(timeseri)[1] + " °C")
-    wl2 = Label(win, text=fetch_weather(timeseri)[2] + " m/s")
-    wl3 = Label(win, text=fetch_weather(timeseri)[3] + " mm")
-    wl4 = Label(win, text=variants_jdata[code]['desc_nb'])
-    wl5 = Label(win, image=img[timeseri])
+    wl0[timeseri] = (Label(win, text="kl " + fetch_weather(timeseri)[0]))
+    wl1[timeseri] = (Label(win, text=fetch_weather(timeseri)[1] + " °C"))
+    wl2[timeseri] = (Label(win, text=fetch_weather(timeseri)[2] + " m/s"))
+    wl3[timeseri] = (Label(win, text=fetch_weather(timeseri)[3] + " mm"))
+    wl4[timeseri] = (Label(win, text=variants_jdata[code]['desc_nb']))
+    wl5[timeseri] = (Label(win, image=img[timeseri]))
 
-    wl0.grid(row=row, column=0)
-    wl1.grid(row=row, column=1)
-    wl2.grid(row=row, column=2)
-    wl3.grid(row=row, column=3)
-    wl4.grid(row=row, column=4)
-    wl5.grid(row=row, column=5)
+    wl0[timeseri].grid(row=row, column=0)
+    wl1[timeseri].grid(row=row, column=1)
+    wl2[timeseri].grid(row=row, column=2)
+    wl3[timeseri].grid(row=row, column=3)
+    wl4[timeseri].grid(row=row, column=4)
+    wl5[timeseri].grid(row=row, column=5)
 
     row += 1
     timeseri += 1
@@ -162,11 +166,20 @@ while i < weather_list:
 
 
 def update():
-    wl1.configure(text="TEST")
-    wl1.grid(row=1, column=0)
-    win.after(1000, update)
+    api_weather()
+
+    timeseri = 1
+    while i <= timeseri:
+        wl0[timeseri].configure(text="kl " + fetch_weather(timeseri)[0])
+        wl1[timeseri].configure(text=fetch_weather(timeseri)[1] + " °C")
+        wl2[timeseri].configure(text=fetch_weather(timeseri)[2] + " m/s")
+        wl3[timeseri].configure(text=fetch_weather(timeseri)[3] + " mm")
+        wl4[timeseri].configure(text=variants_jdata[code]['desc_nb'])
+        wl5[timeseri].configure(image=img[timeseri])
+
+    win.after(900000, update)
 
 
-# update()
+update()
 
 win.mainloop()  # running the loop that works as a trigger
