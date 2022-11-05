@@ -12,7 +12,7 @@ from pathlib import Path
 # definitions
 weather_list = 8
 api_offset = 0
-bg_color = "#040720"
+bg_color = "#020410"
 fg_color = "#DDDDDD"
 
 # Get of variants / Legend
@@ -208,7 +208,7 @@ def update():
 
         i += 1
 
-    win.after(100000, update) # 900000
+    win.after(900000, update) # 900000
 
 
 update()
