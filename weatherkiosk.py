@@ -12,6 +12,8 @@ from pathlib import Path
 # definitions
 weather_list = 8
 api_offset = 0
+bg_color = "#040720"
+fg_color = "#DDDDDD"
 
 # Get of variants / Legend
 variants_url = "https://api.met.no/weatherapi/weathericon/2.0/legends"
@@ -55,8 +57,9 @@ def fetch_weather(wid):
 win = Tk() # creating the main window and storing the window object in 'win'
 win.title('WeatherKiosk') # setting title of the window
 
-#win.geometry("720x480")
+win.geometry("720x480")
 win.attributes("-fullscreen", True)
+# win.configure(background=bg_color)
 
 path = str(Path(__file__).parent.absolute())
 
@@ -88,6 +91,13 @@ h3 = Label(win, image=img_rain)
 
 h4 = Label(win, text="")
 h5 = Label(win, text="")
+
+h0.config(bg=bg_color)
+h1.config(bg=bg_color)
+h2.config(bg=bg_color)
+h3.config(bg=bg_color)
+h4.config(bg=bg_color)
+h5.config(bg=bg_color)
 
 h0.grid(row=0, column=0)
 h1.grid(row=0, column=1)
@@ -153,6 +163,13 @@ while i < weather_list:
     wl4[timeseri] = (Label(win, text=variants_jdata[code]['desc_nb']))
     wl5[timeseri] = (Label(win, image=img[timeseri]))
 
+    wl0[timeseri].config(bg=bg_color, fg=fg_color)
+    wl1[timeseri].config(bg=bg_color, fg=fg_color)
+    wl2[timeseri].config(bg=bg_color, fg=fg_color)
+    wl3[timeseri].config(bg=bg_color, fg=fg_color)
+    wl4[timeseri].config(bg=bg_color, fg=fg_color)
+    wl5[timeseri].config(bg=bg_color, fg=fg_color)
+
     wl0[timeseri].grid(row=row, column=0)
     wl1[timeseri].grid(row=row, column=1)
     wl2[timeseri].grid(row=row, column=2)
@@ -165,6 +182,7 @@ while i < weather_list:
     i += 1
 
     last_update = (Label(win, text="Oppdatert", font=('Arial 10 italic')))
+    last_update.config(bg=bg_color, fg=fg_color)
     last_update.place(relx = 1.0,
                       rely = 0.0,
                       anchor = 'ne')
