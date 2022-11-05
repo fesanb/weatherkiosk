@@ -10,7 +10,8 @@ from PIL import ImageTk, Image
 from pathlib import Path
 
 # definitions
-weather_list = 6
+weather_list = 8
+api_offset = 0
 
 # Get of variants / Legend
 variants_url = "https://api.met.no/weatherapi/weathericon/2.0/legends"
@@ -103,9 +104,15 @@ win.columnconfigure(4, minsize=100)
 win.columnconfigure(5, minsize=100)
 
 row = 1
-timeseri = 1
+timeseri = api_offset
 i = 0
 img = {}
+wl0 = {}
+wl1 = {}
+wl2 = {}
+wl3 = {}
+wl4 = {}
+wl5 = {}
 
 while i < weather_list:
     # Get data for wl4
@@ -139,13 +146,6 @@ while i < weather_list:
 
     img[timeseri] = ImageTk.PhotoImage(images)
 
-    wl0 = {}
-    wl1 = {}
-    wl2 = {}
-    wl3 = {}
-    wl4 = {}
-    wl5 = {}
-
     wl0[timeseri] = (Label(win, text="kl " + fetch_weather(timeseri)[0]))
     wl1[timeseri] = (Label(win, text=fetch_weather(timeseri)[1] + " °C"))
     wl2[timeseri] = (Label(win, text=fetch_weather(timeseri)[2] + " m/s"))
@@ -164,12 +164,23 @@ while i < weather_list:
     timeseri += 1
     i += 1
 
+    last_update = (Label(win, text="Oppdatert", font=('Arial 10 italic')))
+    last_update.place(relx = 1.0,
+                      rely = 0.0,
+                      anchor = 'ne')
+
 
 def update():
     api_weather()
 
-    timeseri = 1
-    while i <= timeseri:
+    now = datetime.now()
+    current_time = now.strftime("%d.%m.%Y - %H:%M")
+    last_update.configure(text="Oppdatert: " + current_time)
+
+    timeseri = api_offset
+    i = 0
+
+    while i <= weather_list:
         wl0[timeseri].configure(text="kl " + fetch_weather(timeseri)[0])
         wl1[timeseri].configure(text=fetch_weather(timeseri)[1] + " °C")
         wl2[timeseri].configure(text=fetch_weather(timeseri)[2] + " m/s")
@@ -177,7 +188,9 @@ def update():
         wl4[timeseri].configure(text=variants_jdata[code]['desc_nb'])
         wl5[timeseri].configure(image=img[timeseri])
 
-    win.after(900000, update)
+        i += 1
+
+    win.after(100000, update) # 900000
 
 
 update()
