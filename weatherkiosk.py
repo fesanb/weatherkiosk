@@ -57,9 +57,9 @@ def fetch_weather(wid):
 win = Tk() # creating the main window and storing the window object in 'win'
 win.title('WeatherKiosk') # setting title of the window
 
-win.geometry("720x480")
+# win.geometry("720x480")
 win.attributes("-fullscreen", True)
-# win.configure(background=bg_color)
+win.configure(background=bg_color)
 
 path = str(Path(__file__).parent.absolute())
 
