@@ -1,10 +1,10 @@
 #!/usr/bin/python
 
+import user_data
 import requests
 import json
 
 from datetime import datetime, timedelta
-
 from tkinter import *
 from PIL import ImageTk, Image
 from pathlib import Path
@@ -17,15 +17,15 @@ fg_color = "#DDDDDD"
 
 # Get of variants / Legend
 variants_url = "https://api.met.no/weatherapi/weathericon/2.0/legends"
-variants_headers = {'user-agent': 'weatherkiosk/0.1 stefan@bahrawy.net'}
+variants_headers = {'user-agent': 'weatherkiosk/1.0'+ user_data.mail}
 variants_response = requests.get(variants_url, headers=variants_headers)
 
 variants_rdata = variants_response.text
 variants_jdata = json.loads(variants_rdata)
 
 def api_weather():
-    weather_url = 'https://api.met.no/weatherapi/locationforecast/2.0/compact?lat=59.961662&lon=10.741941'
-    weather_header = {'user-agent': 'weatherkiosk/0.1 stefan@bahrawy.net'}
+    weather_url = 'https://api.met.no/weatherapi/locationforecast/2.0/compact?lat=' + user_data.lat + "&" + user_data.lon
+    weather_header = {'user-agent': 'weatherkiosk/1.0' + user_data.mail}
     weather_response = requests.get(weather_url, headers=weather_header)
 
     weather_rdata = weather_response.text
@@ -57,8 +57,8 @@ def fetch_weather(wid):
 win = Tk() # creating the main window and storing the window object in 'win'
 win.title('WeatherKiosk') # setting title of the window
 
-# win.geometry("720x480")
-win.attributes("-fullscreen", True)
+win.geometry("720x480")
+#win.attributes("-fullscreen", True)
 win.configure(background=bg_color)
 
 path = str(Path(__file__).parent.absolute())
@@ -78,11 +78,6 @@ img_wind = ImageTk.PhotoImage(img)
 tmp_img = Image.open(path + "/img/rain.png")
 img = tmp_img.resize((50, 50))
 img_rain = ImageTk.PhotoImage(img)
-
-# h0 = Label(win, text="TID")
-# h1 = Label(win, text="TEMPERATUR")
-# h2 = Label(win, text="VIND")
-# h3 = Label(win, text="REGN")
 
 h0 = Label(win, image=img_clock)
 h1 = Label(win, image=img_temp)
