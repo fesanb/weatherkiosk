@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-import user_data
+import user_data # local file for coordinates and e-mail. See readme for creation.
 import requests
 import json
 
