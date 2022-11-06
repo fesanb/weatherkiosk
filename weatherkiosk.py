@@ -203,6 +203,8 @@ def update():
 
         i += 1
 
+    i = 0
+
     win.after(900000, update) # 900000
 
 
