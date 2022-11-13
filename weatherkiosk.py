@@ -57,8 +57,8 @@ def fetch_weather(wid):
 win = Tk() # creating the main window and storing the window object in 'win'
 win.title('WeatherKiosk') # setting title of the window
 
-#win.geometry("720x480")
-win.attributes("-fullscreen", True)
+win.geometry("720x480")
+#win.attributes("-fullscreen", True)
 win.configure(background=bg_color)
 
 path = str(Path(__file__).parent.absolute())
@@ -108,9 +108,6 @@ win.columnconfigure(3, minsize=100)
 win.columnconfigure(4, minsize=100)
 win.columnconfigure(5, minsize=100)
 
-row = 1
-timeseri = api_offset
-i = 0
 img = {}
 wl0 = {}
 wl1 = {}
@@ -119,15 +116,51 @@ wl3 = {}
 wl4 = {}
 wl5 = {}
 
-while i < weather_list:
+i_c = 0
+row = 1
+timeseri = api_offset
+
+while i_c < weather_list: # Create Grid
+    wl0[timeseri] = (Label(win, text="wl0"))
+    wl1[timeseri] = (Label(win, text="wl1"))
+    wl2[timeseri] = (Label(win, text="wl2"))
+    wl3[timeseri] = (Label(win, text="wl3"))
+    wl4[timeseri] = (Label(win, text="wl4"))
+    wl5[timeseri] = (Label(win))
+
+    wl0[timeseri].config(bg=bg_color, fg=fg_color)
+    wl1[timeseri].config(bg=bg_color, fg=fg_color)
+    wl2[timeseri].config(bg=bg_color, fg=fg_color)
+    wl3[timeseri].config(bg=bg_color, fg=fg_color)
+    wl4[timeseri].config(bg=bg_color, fg=fg_color)
+    wl5[timeseri].config(bg=bg_color, fg=fg_color)
+
+    wl0[timeseri].grid(row=row, column=0)
+    wl1[timeseri].grid(row=row, column=1)
+    wl2[timeseri].grid(row=row, column=2)
+    wl3[timeseri].grid(row=row, column=3)
+    wl4[timeseri].grid(row=row, column=4)
+    wl5[timeseri].grid(row=row, column=5)
+
+    row += 1
+    timeseri += 1
+    i_c += 1
+
+last_update = (Label(win, text="Oppdatert", font=('Arial 10 italic')))
+last_update.config(bg=bg_color, fg=fg_color)
+last_update.place(relx=1.0,
+                  rely=0.0,
+                  anchor='ne')
+
+def image(t): # t =timeseri
     # Get data for wl4
-    tmp_code = fetch_weather(timeseri)[4]
+    tmp_code = fetch_weather(t)[4]
     if "_" in tmp_code:
         red_code = tmp_code.split("_")
         code = red_code[0]
         tmp_variant = red_code[1]
     else:
-        code = fetch_weather(timeseri)[4]
+        code = fetch_weather(t)[4]
         tmp_variant = ""
 
     # get data for wl5
@@ -149,38 +182,44 @@ while i < weather_list:
     tmp_img = Image.open(name)
     images = tmp_img.resize((50, 50))
 
-    img[timeseri] = ImageTk.PhotoImage(images)
+    img[t] = ImageTk.PhotoImage(images)
 
-    wl0[timeseri] = (Label(win, text="kl " + fetch_weather(timeseri)[0]))
-    wl1[timeseri] = (Label(win, text=fetch_weather(timeseri)[1] + " °C"))
-    wl2[timeseri] = (Label(win, text=fetch_weather(timeseri)[2] + " m/s"))
-    wl3[timeseri] = (Label(win, text=fetch_weather(timeseri)[3] + " mm"))
-    wl4[timeseri] = (Label(win, text=variants_jdata[code]['desc_nb']))
-    wl5[timeseri] = (Label(win, image=img[timeseri]))
+    return img[t], code
 
-    wl0[timeseri].config(bg=bg_color, fg=fg_color)
-    wl1[timeseri].config(bg=bg_color, fg=fg_color)
-    wl2[timeseri].config(bg=bg_color, fg=fg_color)
-    wl3[timeseri].config(bg=bg_color, fg=fg_color)
-    wl4[timeseri].config(bg=bg_color, fg=fg_color)
-    wl5[timeseri].config(bg=bg_color, fg=fg_color)
 
-    wl0[timeseri].grid(row=row, column=0)
-    wl1[timeseri].grid(row=row, column=1)
-    wl2[timeseri].grid(row=row, column=2)
-    wl3[timeseri].grid(row=row, column=3)
-    wl4[timeseri].grid(row=row, column=4)
-    wl5[timeseri].grid(row=row, column=5)
-
-    row += 1
-    timeseri += 1
-    i += 1
-
-    last_update = (Label(win, text="Oppdatert", font=('Arial 10 italic')))
-    last_update.config(bg=bg_color, fg=fg_color)
-    last_update.place(relx = 1.0,
-                      rely = 0.0,
-                      anchor = 'ne')
+# while i < weather_list:
+#     image
+#
+#     wl0[timeseri] = (Label(win, text="kl " + fetch_weather(timeseri)[0]))
+#     wl1[timeseri] = (Label(win, text=fetch_weather(timeseri)[1] + " °C"))
+#     wl2[timeseri] = (Label(win, text=fetch_weather(timeseri)[2] + " m/s"))
+#     wl3[timeseri] = (Label(win, text=fetch_weather(timeseri)[3] + " mm"))
+#     wl4[timeseri] = (Label(win, text=variants_jdata[code]['desc_nb']))
+#     wl5[timeseri] = (Label(win, image=img[timeseri]))
+#
+#     wl0[timeseri].config(bg=bg_color, fg=fg_color)
+#     wl1[timeseri].config(bg=bg_color, fg=fg_color)
+#     wl2[timeseri].config(bg=bg_color, fg=fg_color)
+#     wl3[timeseri].config(bg=bg_color, fg=fg_color)
+#     wl4[timeseri].config(bg=bg_color, fg=fg_color)
+#     wl5[timeseri].config(bg=bg_color, fg=fg_color)
+#
+#     wl0[timeseri].grid(row=row, column=0)
+#     wl1[timeseri].grid(row=row, column=1)
+#     wl2[timeseri].grid(row=row, column=2)
+#     wl3[timeseri].grid(row=row, column=3)
+#     wl4[timeseri].grid(row=row, column=4)
+#     wl5[timeseri].grid(row=row, column=5)
+#
+#     row += 1
+#     timeseri += 1
+#     i += 1
+#
+#     last_update = (Label(win, text="Oppdatert", font=('Arial 10 italic')))
+#     last_update.config(bg=bg_color, fg=fg_color)
+#     last_update.place(relx = 1.0,
+#                       rely = 0.0,
+#                       anchor = 'ne')
 
 
 def update():
@@ -193,17 +232,16 @@ def update():
     timeseri = api_offset
     i = 0
 
-    while i <= weather_list:
+    while i < weather_list:
         wl0[timeseri].configure(text="kl " + fetch_weather(timeseri)[0])
         wl1[timeseri].configure(text=fetch_weather(timeseri)[1] + " °C")
         wl2[timeseri].configure(text=fetch_weather(timeseri)[2] + " m/s")
         wl3[timeseri].configure(text=fetch_weather(timeseri)[3] + " mm")
-        wl4[timeseri].configure(text=variants_jdata[code]['desc_nb'])
-        wl5[timeseri].configure(image=img[timeseri])
+        wl4[timeseri].configure(text=variants_jdata[image(timeseri)[1]]['desc_nb'])
+        wl5[timeseri].configure(image=image(timeseri)[0])
 
         i += 1
-
-    i = 0
+        timeseri += 1
 
     win.after(900000, update) # 900000
 
