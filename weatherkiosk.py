@@ -30,18 +30,18 @@ def api_weather():
 
     weather_rdata = weather_response.text
     weather_jdata = json.loads(weather_rdata)
+    print("API REQUEST DONE ")
 
     return weather_jdata
 
-
-
+w_data = api_weather()
 def fetch_weather(wid):
 
-    time = str(api_weather()['properties']['timeseries'][wid]['time'])
-    temp = str(api_weather()['properties']['timeseries'][wid]['data']['instant']['details']['air_temperature'])
-    wind = str(api_weather()['properties']['timeseries'][wid]['data']['instant']['details']['wind_speed'])
-    rain = str(api_weather()['properties']['timeseries'][wid]['data']['next_1_hours']['details']['precipitation_amount'])
-    code = str(api_weather()['properties']['timeseries'][wid]['data']['next_1_hours']['summary']['symbol_code'])
+    time = str(w_data['properties']['timeseries'][wid]['time'])
+    temp = str(w_data['properties']['timeseries'][wid]['data']['instant']['details']['air_temperature'])
+    wind = str(w_data['properties']['timeseries'][wid]['data']['instant']['details']['wind_speed'])
+    rain = str(w_data['properties']['timeseries'][wid]['data']['next_1_hours']['details']['precipitation_amount'])
+    code = str(w_data['properties']['timeseries'][wid]['data']['next_1_hours']['summary']['symbol_code'])
     cleantime = time[11:16]
 
     format = '%H:%M'
@@ -57,8 +57,8 @@ def fetch_weather(wid):
 win = Tk() # creating the main window and storing the window object in 'win'
 win.title('WeatherKiosk') # setting title of the window
 
-#win.geometry("720x480")
-win.attributes("-fullscreen", True)
+win.geometry("720x480")
+#win.attributes("-fullscreen", True)
 win.configure(background=bg_color)
 
 path = str(Path(__file__).parent.absolute())
@@ -186,44 +186,8 @@ def image(t): # t =timeseri
 
     return img[t], code
 
-
-# while i < weather_list:
-#     image
-#
-#     wl0[timeseri] = (Label(win, text="kl " + fetch_weather(timeseri)[0]))
-#     wl1[timeseri] = (Label(win, text=fetch_weather(timeseri)[1] + " °C"))
-#     wl2[timeseri] = (Label(win, text=fetch_weather(timeseri)[2] + " m/s"))
-#     wl3[timeseri] = (Label(win, text=fetch_weather(timeseri)[3] + " mm"))
-#     wl4[timeseri] = (Label(win, text=variants_jdata[code]['desc_nb']))
-#     wl5[timeseri] = (Label(win, image=img[timeseri]))
-#
-#     wl0[timeseri].config(bg=bg_color, fg=fg_color)
-#     wl1[timeseri].config(bg=bg_color, fg=fg_color)
-#     wl2[timeseri].config(bg=bg_color, fg=fg_color)
-#     wl3[timeseri].config(bg=bg_color, fg=fg_color)
-#     wl4[timeseri].config(bg=bg_color, fg=fg_color)
-#     wl5[timeseri].config(bg=bg_color, fg=fg_color)
-#
-#     wl0[timeseri].grid(row=row, column=0)
-#     wl1[timeseri].grid(row=row, column=1)
-#     wl2[timeseri].grid(row=row, column=2)
-#     wl3[timeseri].grid(row=row, column=3)
-#     wl4[timeseri].grid(row=row, column=4)
-#     wl5[timeseri].grid(row=row, column=5)
-#
-#     row += 1
-#     timeseri += 1
-#     i += 1
-#
-#     last_update = (Label(win, text="Oppdatert", font=('Arial 10 italic')))
-#     last_update.config(bg=bg_color, fg=fg_color)
-#     last_update.place(relx = 1.0,
-#                       rely = 0.0,
-#                       anchor = 'ne')
-
-
 def update():
-    api_weather()
+    w_data = api_weather()
 
     now = datetime.now()
     current_time = now.strftime("%d.%m.%Y - %H:%M")
