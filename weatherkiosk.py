@@ -30,7 +30,7 @@ def api_weather():
 
     weather_rdata = weather_response.text
     weather_jdata = json.loads(weather_rdata)
-    print("API REQUEST DONE ")
+    print("API REQUEST - Done ")
 
     return weather_jdata
 
@@ -50,6 +50,7 @@ def fetch_weather(wid):
     tmp_cleantime = time + timedelta(minutes=120)
     tmp_cleantime = tmp_cleantime.strftime(format)
     cleantime = str(tmp_cleantime)
+    # print("Fetch Weather - Done")
 
     return cleantime, temp, wind, rain, code
 
@@ -57,8 +58,8 @@ def fetch_weather(wid):
 win = Tk() # creating the main window and storing the window object in 'win'
 win.title('WeatherKiosk') # setting title of the window
 
-#win.geometry("720x480")
-win.attributes("-fullscreen", True)
+win.geometry("720x480")
+#win.attributes("-fullscreen", True)
 win.configure(background=bg_color)
 
 path = str(Path(__file__).parent.absolute())
@@ -208,6 +209,8 @@ def update():
         timeseri += 1
 
     win.after(900000, update) # 900000
+
+    print("Update - Done")
 
 
 update()
