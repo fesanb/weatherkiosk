@@ -34,21 +34,24 @@ def api_weather():
 
     return weather_jdata
 
-w_data = api_weather()
-def fetch_weather(wid):
 
-    time = str(w_data['properties']['timeseries'][wid]['time'])
-    temp = str(w_data['properties']['timeseries'][wid]['data']['instant']['details']['air_temperature'])
-    wind = str(w_data['properties']['timeseries'][wid]['data']['instant']['details']['wind_speed'])
-    rain = str(w_data['properties']['timeseries'][wid]['data']['next_1_hours']['details']['precipitation_amount'])
-    code = str(w_data['properties']['timeseries'][wid]['data']['next_1_hours']['summary']['symbol_code'])
+w_data = api_weather()
+
+
+def fetch_weather(wid, w_data2):
+
+    time = str(w_data2['properties']['timeseries'][wid]['time'])
+    temp = str(w_data2['properties']['timeseries'][wid]['data']['instant']['details']['air_temperature'])
+    wind = str(w_data2['properties']['timeseries'][wid]['data']['instant']['details']['wind_speed'])
+    rain = str(w_data2['properties']['timeseries'][wid]['data']['next_1_hours']['details']['precipitation_amount'])
+    code = str(w_data2['properties']['timeseries'][wid]['data']['next_1_hours']['summary']['symbol_code'])
     cleantime = time[11:16]
 
-    format = '%H:%M'
+    format_time = '%H:%M'
 
-    time = datetime.strptime(cleantime, format)
+    time = datetime.strptime(cleantime, format_time)
     tmp_cleantime = time + timedelta(minutes=120)
-    tmp_cleantime = tmp_cleantime.strftime(format)
+    tmp_cleantime = tmp_cleantime.strftime(format_time)
     cleantime = str(tmp_cleantime)
     # print("Fetch Weather - Done")
 
@@ -58,8 +61,8 @@ def fetch_weather(wid):
 win = Tk() # creating the main window and storing the window object in 'win'
 win.title('WeatherKiosk') # setting title of the window
 
-win.geometry("720x480")
-#win.attributes("-fullscreen", True)
+# win.geometry("720x480")
+win.attributes("-fullscreen", True)
 win.configure(background=bg_color)
 
 path = str(Path(__file__).parent.absolute())
@@ -153,15 +156,16 @@ last_update.place(relx=1.0,
                   rely=0.0,
                   anchor='ne')
 
+
 def image(t): # t =timeseri
     # Get data for wl4
-    tmp_code = fetch_weather(t)[4]
+    tmp_code = fetch_weather(t, w_data)[4]
     if "_" in tmp_code:
         red_code = tmp_code.split("_")
         code = red_code[0]
         tmp_variant = red_code[1]
     else:
-        code = fetch_weather(t)[4]
+        code = fetch_weather(t, w_data)[4]
         tmp_variant = ""
 
     # get data for wl5
@@ -187,6 +191,7 @@ def image(t): # t =timeseri
 
     return img[t], code
 
+
 def update():
     w_data = api_weather()
 
@@ -198,10 +203,10 @@ def update():
     i = 0
 
     while i < weather_list:
-        wl0[timeseri].configure(text="kl " + fetch_weather(timeseri)[0])
-        wl1[timeseri].configure(text=fetch_weather(timeseri)[1] + " °C")
-        wl2[timeseri].configure(text=fetch_weather(timeseri)[2] + " m/s")
-        wl3[timeseri].configure(text=fetch_weather(timeseri)[3] + " mm")
+        wl0[timeseri].configure(text="kl " + fetch_weather(timeseri, w_data)[0])
+        wl1[timeseri].configure(text=fetch_weather(timeseri, w_data)[1] + " °C")
+        wl2[timeseri].configure(text=fetch_weather(timeseri, w_data)[2] + " m/s")
+        wl3[timeseri].configure(text=fetch_weather(timeseri, w_data)[3] + " mm")
         wl4[timeseri].configure(text=variants_jdata[image(timeseri)[1]]['desc_nb'])
         wl5[timeseri].configure(image=image(timeseri)[0])
 
