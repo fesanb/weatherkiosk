@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-import user_data # local file for coordinates and e-mail. See readme for creation.
+import user_data  # local file for coordinates and e-mail. See readme for creation.
 import requests
 import json
 
@@ -22,6 +22,7 @@ variants_response = requests.get(variants_url, headers=variants_headers)
 
 variants_rdata = variants_response.text
 variants_jdata = json.loads(variants_rdata)
+
 
 def api_weather():
     weather_url = 'https://api.met.no/weatherapi/locationforecast/2.0/compact?lat=' + user_data.lat + "&lon=" + user_data.lon
@@ -58,8 +59,8 @@ def fetch_weather(wid, w_data2):
     return cleantime, temp, wind, rain, code
 
 
-win = Tk() # creating the main window and storing the window object in 'win'
-win.title('WeatherKiosk') # setting title of the window
+win = Tk()  # creating the main window and storing the window object in 'win'
+win.title('WeatherKiosk')  # setting title of the window
 
 # win.geometry("720x480")
 win.attributes("-fullscreen", True)
@@ -124,7 +125,7 @@ i_c = 0
 row = 1
 timeseri = api_offset
 
-while i_c < weather_list: # Create Grid
+while i_c < weather_list:  # Create Grid
     wl0[timeseri] = (Label(win, text="wl0"))
     wl1[timeseri] = (Label(win, text="wl1"))
     wl2[timeseri] = (Label(win, text="wl2"))
@@ -150,22 +151,22 @@ while i_c < weather_list: # Create Grid
     timeseri += 1
     i_c += 1
 
-last_update = (Label(win, text="Oppdatert", font=('Arial 10 italic')))
+last_update = (Label(win, text="Oppdatert", font='Arial 10 italic'))
 last_update.config(bg=bg_color, fg=fg_color)
 last_update.place(relx=1.0,
                   rely=0.0,
                   anchor='ne')
 
 
-def image(t): # t =timeseri
+def image(t, w_data3):  # t =timeseri
     # Get data for wl4
-    tmp_code = fetch_weather(t, w_data)[4]
+    tmp_code = fetch_weather(t, w_data3)[4]
     if "_" in tmp_code:
         red_code = tmp_code.split("_")
         code = red_code[0]
         tmp_variant = red_code[1]
     else:
-        code = fetch_weather(t, w_data)[4]
+        code = fetch_weather(t, w_data3)[4]
         tmp_variant = ""
 
     # get data for wl5
@@ -184,8 +185,8 @@ def image(t): # t =timeseri
 
     name = path + "/w-img/" + number + variant + ".png"
 
-    tmp_img = Image.open(name)
-    images = tmp_img.resize((50, 50))
+    tmp_img2 = Image.open(name)
+    images = tmp_img2.resize((50, 50))
 
     img[t] = ImageTk.PhotoImage(images)
 
@@ -193,27 +194,27 @@ def image(t): # t =timeseri
 
 
 def update():
-    w_data = api_weather()
+    w_data2 = api_weather()
 
     now = datetime.now()
     current_time = now.strftime("%d.%m.%Y - %H:%M")
     last_update.configure(text="Oppdatert: " + current_time)
 
-    timeseri = api_offset
+    timeseri2 = api_offset
     i = 0
 
     while i < weather_list:
-        wl0[timeseri].configure(text="kl " + fetch_weather(timeseri, w_data)[0])
-        wl1[timeseri].configure(text=fetch_weather(timeseri, w_data)[1] + " °C")
-        wl2[timeseri].configure(text=fetch_weather(timeseri, w_data)[2] + " m/s")
-        wl3[timeseri].configure(text=fetch_weather(timeseri, w_data)[3] + " mm")
-        wl4[timeseri].configure(text=variants_jdata[image(timeseri)[1]]['desc_nb'])
-        wl5[timeseri].configure(image=image(timeseri)[0])
+        wl0[timeseri2].configure(text="kl " + fetch_weather(timeseri2, w_data2)[0])
+        wl1[timeseri2].configure(text=fetch_weather(timeseri2, w_data2)[1] + " °C")
+        wl2[timeseri2].configure(text=fetch_weather(timeseri2, w_data2)[2] + " m/s")
+        wl3[timeseri2].configure(text=fetch_weather(timeseri2, w_data2)[3] + " mm")
+        wl4[timeseri2].configure(text=variants_jdata[image(timeseri2, w_data2)[1]]['desc_nb'])
+        wl5[timeseri2].configure(image=image(timeseri2, w_data2)[0])
 
         i += 1
-        timeseri += 1
+        timeseri2 += 1
 
-    win.after(900000, update) # 900000
+    win.after(900000, update)  # 900000
 
     print("Update - Done")
 
